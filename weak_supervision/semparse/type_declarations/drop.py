@@ -19,7 +19,7 @@ BASIC_TYPES = {PAS_TYPE, RELATION_TYPE, NUMBER_TYPE, DATE_TYPE, STRING_TYPE}
 STARTING_TYPES = {NUMBER_TYPE, DATE_TYPE, STRING_TYPE}
 
 # Complex types
-# Type for selecting the value in a column in a set of rows. "select" and "mode" functions.
+# Type for selecting the value in a column in a set of rows. "select", "mode", and "extract_entity" functions.
 SELECT_TYPE = ComplexType(PAS_TYPE, ComplexType(RELATION_TYPE, STRING_TYPE))
 
 # Type for filtering structures given a relation. "argmax", "argmin"
@@ -44,9 +44,8 @@ PAS_FILTER = ComplexType(PAS_TYPE, PAS_TYPE)  # first, last, previous, next etc.
 
 PAS_COUNT_TYPE = ComplexType(PAS_TYPE, NUMBER_TYPE)
 
-STRING_TO_NUMBER_TYPE = ComplexType(STRING_TYPE, NUMBER_TYPE)  # count_entities, extract_number
-
-# Numerical operations on numbers within the given relation. "max", "min", "sum", "average" etc.
+# Numerical operations on numbers within the given relation. "max", "min", "sum", "average",
+# "count_entities", "extract_number".
 PAS_NUM_OP = ComplexType(PAS_TYPE, ComplexType(RELATION_TYPE, NUMBER_TYPE))
 
 # Numerical difference (diff)
@@ -56,8 +55,6 @@ NUM_DIFF_TYPE = ComplexType(NUMBER_TYPE, ComplexType(NUMBER_TYPE, NUMBER_TYPE))
 DATE_FUNCTION_TYPE = ComplexType(NUMBER_TYPE, ComplexType(NUMBER_TYPE, ComplexType(NUMBER_TYPE,
                                                                                    DATE_TYPE)))
 
-EXTRACT_ENTITY_TYPE = ComplexType(STRING_TYPE, STRING_TYPE)
-
 generic_name_mapper = NameMapper()  # pylint: disable=invalid-name
 
 generic_name_mapper.map_name_with_signature("all_structures", PAS_TYPE)
@@ -65,6 +62,7 @@ generic_name_mapper.map_name_with_signature("all_structures", PAS_TYPE)
 # <p,<r,s>>
 generic_name_mapper.map_name_with_signature("select", SELECT_TYPE)
 generic_name_mapper.map_name_with_signature("mode", SELECT_TYPE)
+generic_name_mapper.map_name_with_signature("extract_entity", SELECT_TYPE)
 
 # <p,<r,p>>
 generic_name_mapper.map_name_with_signature("argmax", PAS_FILTER_WITH_RELATION)
@@ -99,11 +97,9 @@ generic_name_mapper.map_name_with_signature("next", PAS_FILTER)
 # <p,n>
 generic_name_mapper.map_name_with_signature("count_structures", PAS_COUNT_TYPE)
 
-# <s,n>
-generic_name_mapper.map_name_with_signature("count_entities", STRING_TO_NUMBER_TYPE)
-generic_name_mapper.map_name_with_signature("extract_number", STRING_TO_NUMBER_TYPE)
-
 # <p,<r,n>>
+generic_name_mapper.map_name_with_signature("count_entities", PAS_NUM_OP)
+generic_name_mapper.map_name_with_signature("extract_number", PAS_NUM_OP)
 generic_name_mapper.map_name_with_signature("max", PAS_NUM_OP)
 generic_name_mapper.map_name_with_signature("min", PAS_NUM_OP)
 generic_name_mapper.map_name_with_signature("average", PAS_NUM_OP)
@@ -115,8 +111,6 @@ generic_name_mapper.map_name_with_signature("diff", NUM_DIFF_TYPE)
 # <n,<n,<n,d>>>
 generic_name_mapper.map_name_with_signature("date", DATE_FUNCTION_TYPE)
 
-# <s,s>
-generic_name_mapper.map_name_with_signature("extract_entity", EXTRACT_ENTITY_TYPE)
 
 COMMON_NAME_MAPPING = generic_name_mapper.common_name_mapping
 COMMON_TYPE_SIGNATURE = generic_name_mapper.common_type_signature
