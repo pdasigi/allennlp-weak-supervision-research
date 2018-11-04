@@ -51,9 +51,11 @@ PAS_NUM_OP = ComplexType(PAS_TYPE, ComplexType(RELATION_TYPE, NUMBER_TYPE))
 # Numerical difference (diff)
 NUM_DIFF_TYPE = ComplexType(NUMBER_TYPE, ComplexType(NUMBER_TYPE, NUMBER_TYPE))
 
-# Date function takes three numbers and makes a date
-DATE_FUNCTION_TYPE = ComplexType(NUMBER_TYPE, ComplexType(NUMBER_TYPE, ComplexType(NUMBER_TYPE,
-                                                                                   DATE_TYPE)))
+# Date function takes four numbers and makes a date
+DATE_FUNCTION_TYPE = ComplexType(NUMBER_TYPE, ComplexType(NUMBER_TYPE,
+                                                          ComplexType(NUMBER_TYPE,
+                                                                      ComplexType(NUMBER_TYPE,
+                                                                                  DATE_TYPE))))
 
 generic_name_mapper = NameMapper()  # pylint: disable=invalid-name
 
@@ -108,7 +110,7 @@ generic_name_mapper.map_name_with_signature("sum", PAS_NUM_OP)
 # <n,<n,n>>
 generic_name_mapper.map_name_with_signature("diff", NUM_DIFF_TYPE)
 
-# <n,<n,<n,d>>>
+# <n,<n,<n,<n,d>>>>
 generic_name_mapper.map_name_with_signature("date", DATE_FUNCTION_TYPE)
 
 

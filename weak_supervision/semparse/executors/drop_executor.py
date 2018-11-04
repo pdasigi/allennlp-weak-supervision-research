@@ -182,7 +182,7 @@ class DropExecutor:
                                              structure[relation_name].numbers]
         if not number_structure_pairs_to_compare:
             return []
-        return sorted(number_structure_pairs_to_compare, key=lambda x: x[0], reverse=True)[0]
+        return [sorted(number_structure_pairs_to_compare, key=lambda x: x[0], reverse=True)[0][1]]
 
     def argmin(self, structure_expression_list: NestedList, relation_name: str) -> List[Dict[str, str]]:
         """
@@ -209,7 +209,7 @@ class DropExecutor:
                                              structure[relation_name].numbers]
         if not number_structure_pairs_to_compare:
             return []
-        return sorted(number_structure_pairs_to_compare, key=lambda x: x[0])[0]
+        return [sorted(number_structure_pairs_to_compare, key=lambda x: x[0])[0][1]]
 
     def filter_number_greater(self,
                               structure_expression_list: NestedList,
@@ -373,7 +373,7 @@ class DropExecutor:
                                 structure in structure_list if
                                 structure[relation_name].dates]
         filter_value = self._handle_expression(value_expression)
-        if not isinstance(filter_value, float):
+        if not isinstance(filter_value, Date):
             raise ExecutionError(f"Invalid filter value: {value_expression}")
         return_list = []
         for date, structure in date_structure_pairs:
@@ -397,7 +397,7 @@ class DropExecutor:
                                 structure in structure_list if
                                 structure[relation_name].dates]
         filter_value = self._handle_expression(value_expression)
-        if not isinstance(filter_value, float):
+        if not isinstance(filter_value, Date):
             raise ExecutionError(f"Invalid filter value: {value_expression}")
         return_list = []
         for date, structure in date_structure_pairs:
@@ -421,7 +421,7 @@ class DropExecutor:
                                 structure in structure_list if
                                 structure[relation_name].dates]
         filter_value = self._handle_expression(value_expression)
-        if not isinstance(filter_value, float):
+        if not isinstance(filter_value, Date):
             raise ExecutionError(f"Invalid filter value: {value_expression}")
         return_list = []
         for date, structure in date_structure_pairs:
@@ -445,7 +445,7 @@ class DropExecutor:
                                 structure in structure_list if
                                 structure[relation_name].dates]
         filter_value = self._handle_expression(value_expression)
-        if not isinstance(filter_value, float):
+        if not isinstance(filter_value, Date):
             raise ExecutionError(f"Invalid filter value: {value_expression}")
         return_list = []
         for date, structure in date_structure_pairs:
@@ -469,7 +469,7 @@ class DropExecutor:
                                 structure in structure_list if
                                 structure[relation_name].dates]
         filter_value = self._handle_expression(value_expression)
-        if not isinstance(filter_value, float):
+        if not isinstance(filter_value, Date):
             raise ExecutionError(f"Invalid filter value: {value_expression}")
         return_list = []
         for date, structure in date_structure_pairs:
@@ -493,7 +493,7 @@ class DropExecutor:
                                 structure in structure_list if
                                 structure[relation_name].dates]
         filter_value = self._handle_expression(value_expression)
-        if not isinstance(filter_value, float):
+        if not isinstance(filter_value, Date):
             raise ExecutionError(f"Invalid filter value: {value_expression}")
         return_list = []
         for date, structure in date_structure_pairs:
@@ -723,15 +723,17 @@ class DropExecutor:
         return first_value - second_value
 
     @staticmethod
-    def date(year_string: str, month_string: str, day_string: str) -> Date:
+    def date(year_string: str, month_string: str, day_string: str, quarter_string: str) -> Date:
         """
         Takes three numbers as strings, and returns a ``Date`` object whose year, month, and day are
         the three numbers in that order.
         """
+        date_string = f"{year_string}-{month_string}-{day_string}-{quarter_string}"
         try:
             year = int(str(year_string))
             month = int(str(month_string))
             day = int(str(day_string))
-            return Date(year, month, day)
+            quarter = int(str(quarter_string))
+            return Date(string=date_string, year=year, month=month, day=day, quarter=quarter)
         except ValueError:
-            raise ExecutionError(f"Invalid date! Got {year_string}, {month_string}, {day_string}")
+            raise ExecutionError(f"Invalid date! Got: {date_string}")

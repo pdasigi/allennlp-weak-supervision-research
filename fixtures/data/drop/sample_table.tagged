@@ -1,0 +1,166 @@
+row	col	id	content	tokens	lemmaToken	posTags	nerTags	nerValues	number	date	num2	list	listId
+-1	0	relation:verb	verb										
+-1	1	relation:arg0	ARG0										
+-1	2	relation:arg1	ARG1										
+-1	3	relation:arg2	ARG2										
+-1	4	relation:arg3	ARG3										
+0	0	faced_off	faced off										
+0	1	the_bears	The Bears										
+0	2	on_monday	on Monday							Monday			
+0	3	night_against_the_san_francisco_49ers	night against the San Francisco 49ers					night|the San Francisco 49ers					
+0	4	in_a_battle_of_backup_quarterbacks_between_jason_campbell	in a battle of backup quarterbacks between Jason Campbell					Jason Campbell					
+1	0	alex_smith_were_lost	Alex Smith were lost										
+1	1	jay_cutler_and	Jay Cutler and					Jay Cutler					
+1	2	for_the_game	for the game										
+1	3	due_to_concussions	due to concussions										
+1	4	null	NULL										
+2	0	making	making										
+2	1	with_campbell_and_kaepernick	With Campbell and Kaepernick					Campbell|Kaepernick					
+2	2	their_first_starts_of_the_2012_season	their first starts of the 2012 season					first|first|first		the 2012 season			
+2	3	null	NULL										
+2	4	null	NULL										
+3	0	marked	marked										
+3	1	the_game	the game										
+3	2	the_first_tine_two_quarterbacks_made_their_first_starts_of_the_season_on_monday_night_football_in_a_non_-_strike_season	the first tine two quarterbacks made their first starts of the season on Monday Night Football in a non - strike season					first|first|first	two	the season on Monday Night Football			
+3	3	null	NULL										
+3	4	null	NULL										
+4	0	made	made										
+4	1	the_first_tine_two_quarterbacks	the first tine two quarterbacks					first|first|first	two				
+4	2	their_first_starts_of_the_season_on_monday_night_football_in_a_non_-_strike_season	their first starts of the season on Monday Night Football in a non - strike season					first|first|first		the season on Monday Night Football			
+4	3	null	NULL										
+4	4	null	NULL										
+5	0	quarterbacks	quarterbacks										
+5	1	vince_ferragamo	Vince Ferragamo					Vince Ferragamo					
+5	2	atlanta_falcons	Atlanta Falcons					Atlanta Falcons					
+5	3	null	NULL										
+5	4	null	NULL										
+6	0	completed	completed										
+6	1	he	he										
+6	2	16_of_23_passes_for_243_yards_with_two_touchdowns_and_a_133.1_rating	16 of 23 passes for 243 yards with two touchdowns and a 133.1 rating					243 yards	16|23|two|133.1|two				
+6	3	in_kaepernick_'s_first_career_start	In Kaepernick 's first career start					Kaepernick|first					
+6	4	null	NULL										
+7	0	passes	passes										
+7	1	he	he										
+7	2	for_243_yards_with_two_touchdowns_and_a_133.1_rating	for 243 yards with two touchdowns and a 133.1 rating					243 yards	two|133.1|two				
+7	3	null	NULL										
+7	4	null	NULL										
+8	0	struggled	struggled										
+8	1	campbell	Campbell					Campbell					
+8	2	completing	completing										
+8	3	null	NULL										
+8	4	null	NULL										
+9	0	completing	completing										
+9	1	campbell	Campbell					Campbell					
+9	2	14_of_22_passes_for_107_yards_with_one_touchdown_,_two_interceptions_and_a_52.7_passer_rating	14 of 22 passes for 107 yards with one touchdown , two interceptions and a 52.7 passer rating					107 yards	two|14|one|two|52.7	22			
+9	3	null	NULL										
+9	4	null	NULL										
+10	0	was_also_sacked	was also sacked										
+10	1	campbell	Campbell					Campbell					
+10	2	six_times	six times						six				
+10	3	null	NULL										
+10	4	null	NULL										
+11	0	including	including										
+11	1	campbell	Campbell					Campbell					
+11	2	5.5	5.5						5.5				
+11	3	null	NULL										
+11	4	null	NULL										
+12	0	opposing	opposing										
+12	1	null	NULL										
+12	2	team	team										
+12	3	null	NULL										
+12	4	null	NULL										
+13	0	made	made										
+13	1	david_akers	David Akers					David Akers					
+13	2	a_32-yard_field_goal	a 32-yard field goal					32-yard					
+13	3	null	NULL										
+13	4	null	NULL										
+14	0	went	went										
+14	1	the_bears	the Bears										
+14	2	three_-_and_-_out	three - and - out						three				
+14	3	null	NULL										
+14	4	null	NULL										
+15	0	completed	completed										
+15	1	kaepernick	Kaepernick					Kaepernick					
+15	2	a_57-yard_touchdown_pass_to_kyle_williams	a 57-yard touchdown pass to Kyle Williams					Kyle Williams	57-yard				
+15	3	to_give_the_49ers_a_10_-_0_lead_in_the_first_quarter	to give the 49ers a 10 - 0 lead in the first quarter						49ers|10	the first quarter			
+15	4	after_david_akers_made_a_32-yard	After David Akers made a 32-yard					David Akers|32-yard					
+16	0	to_give	to give										
+16	1	kyle_williams	Kyle Williams					Kyle Williams					
+16	2	the_49ers	the 49ers						49ers				
+16	3	a_10_-_0_lead_in_the_first_quarter	a 10 - 0 lead in the first quarter						10	the first quarter			
+16	4	null	NULL										
+17	0	running	running										
+17	1	49ers	49ers						49ers				
+17	2	back_kendall_hunter	back Kendall Hunter					Kendall Hunter					
+17	3	in_the_second_quarter	In the second quarter							the second quarter			
+17	4	null	NULL										
+18	0	scored	scored										
+18	1	49ers_running_back_kendall_hunter	49ers running back Kendall Hunter					Kendall Hunter	49ers				
+18	2	on_a_14-yard_run	on a 14-yard run						14-yard				
+18	3	in_the_second_quarter	In the second quarter							the second quarter			
+18	4	null	NULL										
+19	0	followed	followed										
+19	1	49ers_running_back_kendall_hunter	49ers running back Kendall Hunter					Kendall Hunter	49ers				
+19	2	by_akers_'_37-yard_field_goal	by Akers ' 37-yard field goal						37-yard				
+19	3	null	NULL										
+19	4	null	NULL										
+20	0	continued	continued										
+20	1	the_49ers	the 49ers						49ers				
+20	2	their_dominance	their dominance										
+20	3	in_the_second_half	In the second half							the second half			
+20	4	null	NULL										
+21	0	hitting	hitting										
+21	1	brandon_marshall	Brandon Marshall					Brandon Marshall					
+21	2	campbell	Campbell					Campbell					
+21	3	null	NULL										
+21	4	null	NULL										
+22	0	,_was_countered	, was countered										
+22	1	on_a_10-yard_touchdown_pass	on a 10-yard touchdown pass						10-yard				
+22	2	by_campbell_hitting_brandon_marshall	by Campbell hitting Brandon Marshall					Campbell|Brandon Marshall					
+22	3	on_a_13-yard_pass	on a 13-yard pass										
+22	4	null	NULL										
+23	0	hit	hit										
+23	1	akers	Akers										
+23	2	a_32-yard_field_goal	a 32-yard field goal						32				
+23	3	in_the_final_quarter	In the final quarter							the final quarter			
+23	4	null	NULL										
+24	0	recorded	recorded										
+24	1	san_francisco	San Francisco					San Francisco					
+24	2	a_safety_when_campbell_fumbled_while_getting_sacked_,_with_the_ball	a safety when Campbell fumbled while getting sacked , with the ball					Campbell					
+24	3	null	NULL										
+24	4	null	NULL										
+25	0	fumbled	fumbled										
+25	1	campbell	Campbell					Campbell					
+25	2	while_getting_sacked	while getting sacked										
+25	3	null	NULL										
+25	4	null	NULL										
+26	0	while_getting_sacked	while getting sacked										
+26	1	campbell_fumbled	Campbell fumbled					Campbell					
+26	2	null	NULL										
+26	3	null	NULL										
+26	4	null	NULL										
+27	0	ball_being_recovered	ball being recovered										
+27	1	with_the	with the										
+27	2	by_bears_offensive_lineman_chilo_rachal_in_the_endzone	by Bears offensive lineman Chilo Rachal in the endzone					Chilo Rachal					
+27	3	null	NULL										
+27	4	null	NULL										
+28	0	making	making										
+28	1	null	NULL										
+28	2	the_final_score_32_-_7	the final score 32 - 7						32				
+28	3	null	NULL										
+28	4	null	NULL										
+29	0	dropped	dropped										
+29	1	the_loss	The loss										
+29	2	chicago	Chicago					Chicago					
+29	3	to_a_7_-_3_record	to a 7 - 3 record										
+29	4	null	NULL										
+30	0	tying	tying										
+30	1	the_loss	The loss										
+30	2	them	them										
+30	3	with_the_packers_for_the_division_lead	with the Packers for the division lead					Packers					
+30	4	null	NULL										
+31	0	was	was										
+31	1	the_loss	The loss										
+31	2	the_eighth_consecutive_loss_at_candlestick_park_since_1985	the eighth consecutive loss at Candlestick Park since 1985					eighth|Candlestick Park		1985			
+31	3	null	NULL										
+31	4	null	NULL										

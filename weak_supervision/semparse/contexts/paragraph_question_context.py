@@ -76,10 +76,18 @@ NUMBER_WORDS = {
 
 
 class Date:
-    def __init__(self, year: int, month: int, day: int) -> None:
+    def __init__(self,
+                 year: int = -1,
+                 month: int = -1,
+                 day: int = -1,
+                 quarter: int = -1,
+                 string: str = None) -> None:
         self.year = year
         self.month = month
         self.day = day
+        self.quarter = quarter  # for the NFL domain
+        self._string_representation = f"{year}-{month}-{day}-{quarter}"
+        self.string = string or self._string_representation
 
     def __eq__(self, other) -> bool:
         # Note that the logic below renders equality to be non-transitive. That is,
@@ -90,7 +98,8 @@ class Date:
         year_is_same = self.year == -1 or other.year == -1 or self.year == other.year
         month_is_same = self.month == -1 or other.month == -1 or self.month == other.month
         day_is_same = self.day == -1 or other.day == -1 or self.day == other.day
-        return year_is_same and month_is_same and day_is_same
+        quarter_is_same = self.quarter == -1 or other.quarter == -1 or self.quarter == other.quarter
+        return year_is_same and month_is_same and day_is_same and quarter_is_same
 
     def __gt__(self, other) -> bool:
         # pylint: disable=too-many-return-statements
@@ -103,6 +112,8 @@ class Date:
         # undefined only when one of the year values is -1, but not both.
         if not isinstance(other, Date):
             return False  # comparison undefined
+        if self.quarter != -1 and other.quarter != -1:
+            return self.quarter > other.quarter
         # We're doing an exclusive or below.
         if (self.year == -1) != (other.year == -1):
             return False  # comparison undefined
@@ -125,7 +136,7 @@ class Date:
         return self > other or self == other
 
     def __str__(self):
-        return f"{self.year}-{self.month}-{self.day}"
+        return self._string_representation
 
     @classmethod
     def make_date(cls, string: str) -> 'Date':
@@ -133,15 +144,23 @@ class Date:
         year = -1
         month = -1
         day = -1
+        quarter = -1
         for part in string_parts:
-            if part.isdigit():
-                if len(part) == 4:
-                    year = int(part)
+            try:
+                if part in NUMBER_WORDS:
+                    part_digit = NUMBER_WORDS[part]
                 else:
-                    day = int(part)
-            elif part in MONTH_NUMBERS:
-                month = MONTH_NUMBERS[part]
-        return Date(year, month, day)
+                    part_digit = int(part)
+                if "quarter" in string:
+                    quarter = part_digit
+                elif part.isdigit() and len(part) == 4:
+                    year = part_digit
+                else:
+                    day = part_digit
+            except ValueError:
+                continue
+            month = MONTH_NUMBERS.get(part, -1)
+        return Date(year, month, day, quarter, string)
 
 
 class Argument:
@@ -213,14 +232,20 @@ class ParagraphQuestionContext:
             date_values = None
             ner_values = None
             if node_info['date']:
-                date_values = [Date.make_date(string) for string in node_info['date'].split('|')]
+                date_values = [Date.make_date(string.replace(" ", "_"))
+                               for string in node_info['date'].split('|')]
             if node_info['number']:
                 number_values = []
                 for string in node_info['number'].split('|'):
-                    try:
-                        number_values.append(float(string))
-                    except ValueError:
+                    if string in NUMBER_WORDS:
+                        number_values.append(NUMBER_WORDS[string])
                         continue
+                    string = re.sub('[a-z,]', '', string.lower()).strip()
+                    for string_part in string.split('-'):
+                        try:
+                            number_values.append(float(string_part))
+                        except ValueError:
+                            continue
             if node_info['nerValues']:
                 ner_values = node_info['nerValues'].split('|')
             paragraph_data[-1][column_name] = Argument(argument_string=cell_value,
@@ -274,11 +299,9 @@ class ParagraphQuestionContext:
         """
         numbers = []
         for i, token in enumerate(tokens):
-            number: Union[int, float] = None
             token_text = token.text
             text = token.text.replace(',', '').lower()
-            if text in NUMBER_WORDS:
-                number = NUMBER_WORDS[text]
+            number: Union[int, float] = NUMBER_WORDS.get(text, None)
 
             magnitude = 1
             if i < len(tokens) - 1:

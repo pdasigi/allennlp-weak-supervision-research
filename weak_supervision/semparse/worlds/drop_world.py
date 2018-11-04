@@ -45,7 +45,7 @@ class DropWorld(World):
             types.PAS_FILTER_WITH_RELATION_AND_NUMBER: 3,
             types.PAS_FILTER_WITH_RELATION_AND_DATE: 3,
             types.PAS_FILTER_WITH_RELATION_AND_STRING: 3,
-            types.DATE_FUNCTION_TYPE: 3,
+            types.DATE_FUNCTION_TYPE: 4,
             }
 
     def __init__(self, paragraph_context: ParagraphQuestionContext) -> None:
