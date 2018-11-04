@@ -65,7 +65,7 @@ class DropWorld(World):
 
         # Adding entities and numbers seen in questions to the mapping.
         question_entities, question_numbers = paragraph_context.get_entities_from_question()
-        self._question_entities = [entity for entity, _ in question_entities]
+        self._question_entities = question_entities
         self._question_numbers = [number for number, _ in question_numbers]
         for entity in self._question_entities:
             # These entities all have prefix "string:"
@@ -74,8 +74,8 @@ class DropWorld(World):
         for number_in_question in self._question_numbers:
             self._map_name(f"num:{number_in_question}", keep_mapping=True)
 
-        for relation_name in paragraph_context[0].keys():
-            self._map_name(f"relation:{relation_name}", keep_mapping=True)
+        for relation_name in paragraph_context.paragraph_data[0].keys():
+            self._map_name(relation_name, keep_mapping=True)
 
         self.terminal_productions: Dict[str, str] = {}
         name_mapping = [(name, mapping) for name, mapping in self.global_name_mapping.items()]

@@ -176,7 +176,7 @@ class DropExecutor:
                                                structure[relation_name].dates]
             if not date_structure_pairs_to_compare:
                 return []
-            return sorted(date_structure_pairs_to_compare, key=lambda x: x[0], reverse=True)[0]
+            return [sorted(date_structure_pairs_to_compare, key=lambda x: x[0], reverse=True)[0][1]]
         number_structure_pairs_to_compare = [(structure[relation_name].numbers[0], structure) for
                                              structure in structure_list if
                                              structure[relation_name].numbers]
@@ -203,7 +203,7 @@ class DropExecutor:
                                                structure[relation_name].dates]
             if not date_structure_pairs_to_compare:
                 return []
-            return sorted(date_structure_pairs_to_compare, key=lambda x: x[0])[0]
+            return [sorted(date_structure_pairs_to_compare, key=lambda x: x[0])[0][1]]
         number_structure_pairs_to_compare = [(structure[relation_name].numbers[0], structure) for
                                              structure in structure_list if
                                              structure[relation_name].numbers]
@@ -698,7 +698,7 @@ class DropExecutor:
         max_frequency = 0
         most_frequent_list: List[str] = []
         for structure in structure_list:
-            argument_value = structure[relation_name]
+            argument_value = structure[relation_name].argument_string
             value_frequencies[argument_value] += 1
             frequency = value_frequencies[argument_value]
             if frequency > max_frequency:
