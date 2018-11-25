@@ -93,6 +93,8 @@ if __name__ == "__main__":
                            default="erm_output")
     argparser.add_argument("--num-logical-forms", type=int, dest="num_logical_forms",
                            help="Number of logical forms to output", default=100)
+    argparser.add_argument("--beam-size", type=int, dest="beam_size",
+                           help="Decoding beam size (default 100)", default=100)
     argparser.add_argument("--variable-free", dest="variable_free", action="store_true",
                            help="""Will use the variable free dataset reader, and assume the
                            archived model is trained on variable free language if set.""")
@@ -120,7 +122,9 @@ if __name__ == "__main__":
     archive = load_archive(args.archived_model, overrides=new_tables_config)
     archived_model = archive.model
     archived_model.training = False
-    archived_model._decoder_trainer._max_num_decoded_sequences = 200
+    archived_model._decoder_trainer._max_num_decoded_sequences = 1000
+    archived_model._decoder_trainer._beam_size = args.beam_size
+    archived_model._decoder_trainer._max_num_finished_states = args.beam_size
     input_dataset = reader.read(args.input)
     input_lines = []
     with open(args.input) as input_file:
