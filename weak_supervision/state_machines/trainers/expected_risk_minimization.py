@@ -22,6 +22,8 @@ class ExpectedRiskMinimization(DecoderTrainer[Callable[[StateType], torch.Tensor
     Parameters
     ----------
     beam_size : ``int``
+        Beam size to use during beam search or the number of times to sample from the transition
+        function if ``use_sampling`` is set while calling decode.
     noramlize_by_length : ``bool``
         Should the log probabilities be normalized by length before renormalizing them? Edunov et
         al. do this in their work.
@@ -52,8 +54,12 @@ class ExpectedRiskMinimization(DecoderTrainer[Callable[[StateType], torch.Tensor
                supervision: Callable[[StateType], torch.Tensor],
                use_sampling: bool = False) -> Dict[str, torch.Tensor]:
         cost_function = supervision
-        finished_states = self._get_finished_states(initial_state, transition_function,
-                                                    use_sampling=use_sampling)
+        if use_sampling:
+            finished_states = self._sample_for_finished_states(initial_state,
+                                                               transition_function)
+        else:
+            finished_states = self._beam_search_for_finished_states(initial_state,
+                                                                    transition_function)
         loss = initial_state.score[0].new_zeros(1)
         finished_model_scores = self._get_model_scores_by_batch(finished_states)
         finished_costs = self._get_costs_by_batch(finished_states, cost_function)
@@ -72,10 +78,9 @@ class ExpectedRiskMinimization(DecoderTrainer[Callable[[StateType], torch.Tensor
         return {'loss': mean_loss,
                 'best_final_states': self._get_best_final_states(finished_states)}
 
-    def _get_finished_states(self,
-                             initial_state: State,
-                             transition_function: TransitionFunction,
-                             use_sampling: bool) -> List[StateType]:
+    def _beam_search_for_finished_states(self,
+                                         initial_state: State,
+                                         transition_function: TransitionFunction) -> List[StateType]:
         finished_states = []
         states = [initial_state]
         num_steps = 0
@@ -83,22 +88,42 @@ class ExpectedRiskMinimization(DecoderTrainer[Callable[[StateType], torch.Tensor
             next_states = []
             grouped_state = states[0].combine_states(states)
             # These states already come sorted.
-            next_transition_states = transition_function.take_step(grouped_state,
-                                                                   sample_states=use_sampling)
-            for next_state in next_transition_states:
+            for next_state in transition_function.take_step(grouped_state, sample_states=False):
                 if next_state.is_finished():
                     finished_states.append(next_state)
                 else:
                     next_states.append(next_state)
 
-            if use_sampling:
-                states = next_states
-            else:
-                states = self._prune_beam(states=next_states,
-                                          beam_size=self._beam_size,
-                                          sort_states=False)
+            states = self._prune_beam(states=next_states,
+                                      beam_size=self._beam_size,
+                                      sort_states=False)
             num_steps += 1
-        if self._max_num_finished_states is not None and not use_sampling:
+        if self._max_num_finished_states is not None:
+            finished_states = self._prune_beam(states=finished_states,
+                                               beam_size=self._max_num_finished_states,
+                                               sort_states=True)
+        return finished_states
+
+    def _sample_for_finished_states(self,
+                                    initial_state: State,
+                                    transition_function: TransitionFunction) -> List[StateType]:
+        finished_states = []
+        for _ in range(self._beam_size):
+            states = [initial_state]
+            num_steps = 0
+            while states and num_steps < self._max_decoding_steps:
+                next_states = []
+                grouped_state = states[0].combine_states(states)
+                # These states already come sorted.
+                for next_state in transition_function.take_step(grouped_state, sample_states=True):
+                    if next_state.is_finished():
+                        finished_states.append(next_state)
+                    else:
+                        next_states.append(next_state)
+
+                states = next_states
+                num_steps += 1
+        if self._max_num_finished_states is not None:
             finished_states = self._prune_beam(states=finished_states,
                                                beam_size=self._max_num_finished_states,
                                                sort_states=True)
