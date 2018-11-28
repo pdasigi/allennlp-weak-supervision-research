@@ -55,6 +55,15 @@ class TestTableQuestionContext(AllenNlpTestCase):
         _, number_entities = table_question_context.get_entities_from_question()
         assert number_entities == [("191617", 5), ("100", 16)]
 
+    def test_number_extraction_with_decimals(self):
+        question = """how many players on the 191617 illinois fighting illini men's basketball team
+                      had more than 0.3 points scored?"""
+        question_tokens = self.tokenizer.tokenize(question)
+        test_file = f'{self.FIXTURES_ROOT}/data/corenlp_processed_tables/TEST-7.table'
+        table_question_context = TableQuestionContext.read_from_file(test_file, question_tokens)
+        _, number_entities = table_question_context.get_entities_from_question()
+        assert number_entities == [("191617", 5), ("0.3", 16)]
+
     def test_date_extraction(self):
         question = "how many laps did matt kenset complete on february 26, 2006."
         question_tokens = self.tokenizer.tokenize(question)
@@ -71,6 +80,14 @@ class TestTableQuestionContext(AllenNlpTestCase):
         table_question_context = TableQuestionContext.read_from_file(test_file, question_tokens)
         _, number_entities = table_question_context.get_entities_from_question()
         assert number_entities == [("1979", 12)]
+
+    def test_entity_extraction_from_question_with_quotes(self):
+        question = "how many times does \"friendly\" appear in the competition column?"
+        question_tokens = self.tokenizer.tokenize(question)
+        test_file = 'fixtures/data/wikitables/tables/346.tagged'
+        table_question_context = TableQuestionContext.read_from_file(test_file, question_tokens)
+        entities, _ = table_question_context.get_entities_from_question()
+        assert entities == [('string:friendly', 'string_column:competition')]
 
     def test_multiword_entity_extraction(self):
         question = "was the positioning better the year of the france venue or the year of the south korea venue?"

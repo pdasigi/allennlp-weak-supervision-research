@@ -384,20 +384,27 @@ class TableQuestionContext:
             # we'll take that risk.  It shouldn't be a big deal.
             text = ''.join(text[i] for i, char in enumerate(text) if char in NUMBER_CHARACTERS)
 
+            text_has_no_words = False
             try:
                 # We'll use a check for float(text) to find numbers, because text.isdigit() doesn't
                 # catch things like "-3" or "0.07".
                 number = float(text)
+                text_has_no_words = True
             except ValueError:
                 pass
 
             if number is not None:
-                number = number * magnitude
-                if '.' in text:
-                    number_string = '%.3f' % number
+                # If the text has words (e.g.: 1 million), we make a string from the number and add
+                # that to our list of numbers. Or else, we directly add the text itself.
+                if text_has_no_words:
+                    numbers.append((text, i))
                 else:
-                    number_string = '%d' % number
-                numbers.append((number_string, i))
+                    number = number * magnitude
+                    if '.' in text:
+                        number_string = '%.3f' % number
+                    else:
+                        number_string = '%d' % number
+                    numbers.append((number_string, i))
                 if is_range:
                     # TODO(mattg): both numbers in the range will have the same text, and so the
                     # linking score won't have any way to differentiate them...  We should figure
