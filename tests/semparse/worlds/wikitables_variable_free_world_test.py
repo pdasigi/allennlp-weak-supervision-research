@@ -5,7 +5,7 @@ from typing import List
 from functools import partial
 
 from allennlp.common.testing import AllenNlpTestCase
-from allennlp.data.tokenizers import Token, WordTokenizer
+from allennlp.data.tokenizers import Token
 from allennlp.semparse import ParsingError
 
 from weak_supervision.semparse.contexts import TableQuestionContext
