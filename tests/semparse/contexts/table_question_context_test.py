@@ -87,7 +87,7 @@ class TestTableQuestionContext(AllenNlpTestCase):
         test_file = 'fixtures/data/wikitables/tables/346.tagged'
         table_question_context = TableQuestionContext.read_from_file(test_file, question_tokens)
         entities, _ = table_question_context.get_entities_from_question()
-        assert entities == [('string:friendly', 'string_column:competition')]
+        assert entities == [('string:friendly', ['string_column:competition'])]
 
     def test_multiword_entity_extraction(self):
         question = "was the positioning better the year of the france venue or the year of the south korea venue?"
@@ -95,8 +95,8 @@ class TestTableQuestionContext(AllenNlpTestCase):
         test_file = f'{self.FIXTURES_ROOT}/data/corenlp_processed_tables/TEST-3.table'
         table_question_context = TableQuestionContext.read_from_file(test_file, question_tokens)
         entities, _ = table_question_context.get_entities_from_question()
-        assert entities == [("string:france", "string_column:venue"),
-                            ("string:south_korea", "string_column:venue")]
+        assert entities == [("string:france", ["string_column:venue"]),
+                            ("string:south_korea", ["string_column:venue"])]
 
     def test_rank_number_extraction(self):
         question = "what was the first tamil-language film in 1943?"
@@ -162,8 +162,8 @@ class TestTableQuestionContext(AllenNlpTestCase):
         test_file = f"{self.FIXTURES_ROOT}/data/corenlp_processed_tables/TEST-11.table"
         table_question_context = TableQuestionContext.read_from_file(test_file, question_tokens)
         string_entities, number_entities = table_question_context.get_entities_from_question()
-        assert string_entities == [("string:m1", "string_column:notation"),
-                                   ("string:1", "string_column:position")]
+        assert string_entities == [("string:m1", ["string_column:notation"]),
+                                   ("string:1", ["string_column:position"])]
         assert number_entities == [("1", 2), ("1", 7)]
 
     def test_get_knowledge_graph(self):
