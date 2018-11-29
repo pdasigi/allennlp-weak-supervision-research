@@ -103,7 +103,7 @@ class TestWikiTablesVariableFreeExecutor(AllenNlpTestCase):
         with self.assertRaises(ExecutionError):
             self.executor.execute(logical_form)
         # Replacing the filter value with an invalid value.
-        logical_form = """(count (filter_number_greater all_rows number_column:avg_attendance
+        logical_form = """(count (filter_number_greater_equals all_rows number_column:avg_attendance
                                   string:usl_a_league))"""
         with self.assertRaises(ExecutionError):
             self.executor.execute(logical_form)
@@ -204,6 +204,11 @@ class TestWikiTablesVariableFreeExecutor(AllenNlpTestCase):
         logical_form = """(count (filter_number_not_equals all_rows date_column:date (date 2010 -1 -1)))"""
         with self.assertRaises(ExecutionError):
             self.executor.execute(logical_form)
+        # Replacing the filter value with an invalid value.
+        logical_form = """(count (filter_number_not_equals all_rows number_column:avg_attendance
+                                  string:usl_a_league))"""
+        with self.assertRaises(ExecutionError):
+            self.executor.execute(logical_form)
 
     def test_execute_works_with_filter_date_not_equals(self):
         # Selecting cell values from all rows that have date not equal to 2001
@@ -238,8 +243,8 @@ class TestWikiTablesVariableFreeExecutor(AllenNlpTestCase):
         cell_list = self.executor.execute(logical_form)
         assert cell_list == ["5th"]
         # Replacing the filter value with an invalid value.
-        logical_form = """(select_string (filter_not_in all_rows string_column:open_cup 2000)
-                                   string_column:regular_season)"""
+        logical_form = """(select_string (filter_not_in all_rows string_column:open_cup
+                                          (date 2000 -1 -1)) string_column:regular_season)"""
         with self.assertRaises(ExecutionError):
             self.executor.execute(logical_form)
 
@@ -378,6 +383,11 @@ class TestWikiTablesVariableFreeExecutor(AllenNlpTestCase):
                                 number_column:avg_attendance)"""
         avg_value = self.executor.execute(logical_form)
         assert avg_value == [6598.5]
+        # Average attendance where playoffs has "a_string_not_in_table". Average should be 0.
+        logical_form = """(average (filter_in all_rows string_column:playoffs
+                                    string:a_string_not_in_table) number_column:avg_attendance)"""
+        avg_value = self.executor.execute(logical_form)
+        assert avg_value == [0.0]
 
     def test_execute_works_with_diff(self):
         # Difference in "avg attendance" between rows with "usl_a_league" and "usl_first_division"
@@ -393,6 +403,12 @@ class TestWikiTablesVariableFreeExecutor(AllenNlpTestCase):
         avg_value = self.executor.execute(logical_form)
         # Difference is an absolute value.
         assert avg_value == [1141.0]
+        logical_form = """(diff (filter_in all_rows string_column:league string:unknown_league)
+                                (filter_in all_rows string_column:league string:usl_a_league)
+                                number_column:avg_attendance)"""
+        avg_value = self.executor.execute(logical_form)
+        # First set of rows is empty. So diff is an empty list.
+        assert avg_value == []
 
     def test_execute_fails_with_diff_on_non_numerical_columns(self):
         logical_form = """(diff (filter_in all_rows string_column:league string:usl_a_league)
