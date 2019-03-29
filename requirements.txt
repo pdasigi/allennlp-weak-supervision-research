@@ -1,4 +1,4 @@
-git+git://github.com/allenai/allennlp
+allennlp==0.8.1
 pylint
 pytest
 pytest-cov
