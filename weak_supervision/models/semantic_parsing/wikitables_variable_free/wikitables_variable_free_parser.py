@@ -15,6 +15,7 @@ from allennlp.nn import util
 from allennlp.semparse import ParsingError
 from allennlp.semparse.type_declarations import type_declaration
 from allennlp.semparse.type_declarations.type_declaration import START_SYMBOL
+from allennlp.semparse.worlds.world import ExecutionError
 from allennlp.state_machines.states import GrammarBasedState, GrammarStatelet, RnnStatelet
 from allennlp.training.metrics import Average
 
@@ -650,6 +651,7 @@ class WikiTablesVariableFreeParser(Model):
                                       range(len(best_final_states[i]))]
                 all_scores = [float(best_final_states[i][j].score[0].detach().cpu())
                               for j in range(len(best_final_states[i]))]
+                found_denotation = False
                 for j, action_indices in enumerate(all_action_indices):
                     action_strings = [action_mapping[(i, action_index)] for action_index in action_indices]
                     has_logical_form = False
@@ -660,19 +662,29 @@ class WikiTablesVariableFreeParser(Model):
                         logical_form = 'Error producing logical form'
                     if target_list:
                         denotation_correct = world[i].evaluate_logical_form(logical_form, target_list[i])
-                    if j == 0:
-                        if has_logical_form:
-                            self._has_logical_form(1.0)
-                        else:
-                            self._has_logical_form(0.0)
-                        if target_list:
-                            self._denotation_accuracy(1.0 if denotation_correct else 0.0)
-                        outputs['best_action_sequence'].append(action_strings)
-                    denotation_correct = world[i].evaluate_logical_form(logical_form, target_list[i])
+                    else:
+                        denotation_correct = False
+                    if not found_denotation:
+                        try:
+                            denotation = world[i].execute(logical_form)
+                            if denotation:
+                                found_denotation = True
+                        except ExecutionError:
+                            pass
+                        if found_denotation:
+                            if has_logical_form:
+                                self._has_logical_form(1.0)
+                            else:
+                                self._has_logical_form(0.0)
+                            if target_list:
+                                self._denotation_accuracy(1.0 if denotation_correct else 0.0)
+                            outputs['best_action_sequence'].append(action_strings)
                     output_data.append({"logical_form": logical_form,
                                         "correct": denotation_correct,
                                         "score": all_scores[j]})
                     outputs['logical_form'][-1].append(logical_form)
+                if not found_denotation:
+                    self._denotation_accuracy(0.0)
                 outputs['debug_info'].append(best_final_states[i][0].debug_info[0])  # type: ignore
                 outputs['entities'].append(world[i].table_graph.entities)
             else:
